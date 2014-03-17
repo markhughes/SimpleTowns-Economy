@@ -1,0 +1,12 @@
+Payments:
+  enable: false
+  create: 20.00
+  delete: 0.00
+  claim: 10.00
+  add: 5.00
+  remove: 0.00
+Refunds:
+  enable: false
+  delete: 10.00
+  unclaim: 5.00
+Message: 'You were charge <amount> for that.'
