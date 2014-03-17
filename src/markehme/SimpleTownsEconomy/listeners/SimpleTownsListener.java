@@ -25,7 +25,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import com.gmail.jameshealey1994.simpletowns.events.TownAddEvent;
-import com.gmail.jameshealey1994.simpletowns.events.TownBeforeReloadEvent;
+import com.gmail.jameshealey1994.simpletowns.events.TownAfterReloadEvent;
 import com.gmail.jameshealey1994.simpletowns.events.TownClaimEvent;
 import com.gmail.jameshealey1994.simpletowns.events.TownCreateEvent;
 import com.gmail.jameshealey1994.simpletowns.events.TownDeleteEvent;
@@ -39,7 +39,7 @@ public class SimpleTownsListener implements Listener {
 	 * @param event
 	 */
 	@EventHandler
-	public void onReload(TownBeforeReloadEvent event) { 
+	public void onReload(TownAfterReloadEvent event) { 
 		SimpleTownsEconomy.doReload();
 	}
 	
@@ -153,7 +153,7 @@ public class SimpleTownsListener implements Listener {
 		}
 	}
 	/**
-	 * Charge for adding a player 
+	 * Charge for removing a player 
 	 * @param event
 	 */
 	public void onRemovePlayer(TownRemoveEvent event) {
