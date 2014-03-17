@@ -9,4 +9,7 @@ Refunds:
   enable: false
   delete: 10.00
   unclaim: 5.00
-Message: 'You were charge <amount> for that.'
+Message:
+  charged: 'You were charged <amount> for that.'
+  chargefail: 'You need <amount> to do that.'
+  refunded: 'You have been refunded <amount>!'
