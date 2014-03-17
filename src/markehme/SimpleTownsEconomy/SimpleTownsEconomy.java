@@ -23,6 +23,8 @@ import java.util.logging.Level;
 
 import markehme.SimpleTownsEconomy.extras.Metrics;
 import markehme.SimpleTownsEconomy.extras.Metrics.Graph;
+import markehme.SimpleTownsEconomy.listeners.SimpleTownsListener;
+
 import net.milkbowl.vault.economy.Economy;
 
 import org.bukkit.Bukkit;
@@ -30,6 +32,8 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.gmail.jameshealey1994.simpletowns.object.Town;
 
 /**
  * SimpleTownsEconomy is a simple plugin for adding economy related
@@ -56,6 +60,11 @@ public class SimpleTownsEconomy extends JavaPlugin {
 		
 		config = getConfig();
 		plugin = this;
+		
+		Bukkit.getPluginManager().registerEvents(new SimpleTownsListener(), this);
+		
+		if(!SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) log("Payments are enabled");
+		if(!SimpleTownsEconomy.getconfig().getBoolean("Refunds.enable")) log("Refunds are enabled");
 		
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration( net.milkbowl.vault.economy.Economy.class );
 		if(economyProvider != null) {
@@ -140,13 +149,28 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @param player
 	 * @param amount
 	 */
-	public static void notifyPlayer(int pass, Player player, Double amount) {
-		if(pass == 1) {
+	public static void notifyPlayer(String pass, Player player, Double amount) {
+		if(pass.equals("charged")) {
 			player.sendMessage(config.getString("Message.charged").replace("<amount>", amount.toString()));
-		} else if(pass == 0) {
+		} else if(pass.equals("chargefail")) {
 			player.sendMessage(config.getString("Message.chargefail").replace("<amount>", amount.toString()));
-		} else if(pass == 2) {
+		} else if(pass.equals("refunded")) {
 			player.sendMessage(config.getString("Message.refunded").replace("<amount>", amount.toString()));
+		}
+	}
+	
+	/**
+	 * Quick and easy method to check if the player is an op, but 
+	 * not apart of the town.
+	 * @param player
+	 * @param town
+	 * @return
+	 */
+	public static boolean shouldCharge(Player player, Town town) {
+		if( (!town.hasMember(player.getName())) && player.isOp() ) {
+			return false;
+		} else {
+			return true;
 		}
 	}
  }
