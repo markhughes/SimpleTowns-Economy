@@ -9,7 +9,14 @@ Refunds:
   enable: false
   delete: 10.00
   unclaim: 5.00
+Bank:
+  enable: false
+  mode: 1
 Message:
   charged: 'You were charged <amount> for that.'
   chargefail: 'You need <amount> to do that.'
   refunded: 'You have been refunded <amount>!'
+  bankadd: 'You have added <amount> to your towns bank.'
+  banktake: 'You have taken <amount> from your towns bank.'
+  bankrequest: '<player> has requested to take <amount> from the <town>\'s bank. To accept this, type /town bank accept <player>'
+  banknotify: '<player> has taken <amount> from <town>\'s bank.'
