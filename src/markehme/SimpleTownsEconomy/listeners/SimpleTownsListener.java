@@ -29,6 +29,7 @@ import com.gmail.jameshealey1994.simpletowns.events.TownBeforeReloadEvent;
 import com.gmail.jameshealey1994.simpletowns.events.TownClaimEvent;
 import com.gmail.jameshealey1994.simpletowns.events.TownCreateEvent;
 import com.gmail.jameshealey1994.simpletowns.events.TownDeleteEvent;
+import com.gmail.jameshealey1994.simpletowns.events.TownRemoveEvent;
 import com.gmail.jameshealey1994.simpletowns.events.TownUnclaimEvent;
 
 public class SimpleTownsListener implements Listener {
@@ -54,15 +55,16 @@ public class SimpleTownsListener implements Listener {
 		
 		if(SimpleTownsEconomy.getconfig().getDouble("Payments.create") > 0) {
 			if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"))) {
-				
+				SimpleTownsEconomy.notifyPlayer(1, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"));
 			} else {
+				SimpleTownsEconomy.notifyPlayer(0, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"));
 				event.setCancelled(true);
 			}
 		}
 	}
 	
 	/**
-	 * Charge for account delete (for whatever reason you're doing that?!)
+	 * Charge for Town delete (for whatever reason you're doing that?!)
 	 * Or, refunds
 	 * @param event
 	 */
@@ -74,9 +76,9 @@ public class SimpleTownsListener implements Listener {
 		if(SimpleTownsEconomy.getconfig().getBoolean("Payments.enabled")) {
 			if(SimpleTownsEconomy.getconfig().getDouble("Payments.delete") > 0) {
 				if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"))) {
-					// failed
-					
+					SimpleTownsEconomy.notifyPlayer(1, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"));
 				} else {
+					SimpleTownsEconomy.notifyPlayer(0, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"));
 					event.setCancelled(true);
 				}
 			}
@@ -87,6 +89,7 @@ public class SimpleTownsListener implements Listener {
 		if(SimpleTownsEconomy.getconfig().getBoolean("Refunds.enabled")) {
 			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.delete") > 0) {
 				SimpleTownsEconomy.refundPlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.delete"));
+				SimpleTownsEconomy.notifyPlayer(2, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.delete"));
 			}
 		}
 	}
@@ -103,8 +106,9 @@ public class SimpleTownsListener implements Listener {
 		
 		if(SimpleTownsEconomy.getconfig().getDouble("Payments.claim") > 0) {
 			if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim"))) {
-				
+				SimpleTownsEconomy.notifyPlayer(1, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim"));
 			} else {
+				SimpleTownsEconomy.notifyPlayer(0, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim"));
 				event.setCancelled(true);
 			}
 		}
@@ -121,11 +125,10 @@ public class SimpleTownsListener implements Listener {
 		if(SimpleTownsEconomy.getconfig().getBoolean("Refunds.enabled")) {
 			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.unclaim") > 0) {
 				if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.unclaim"))) {
-					// success
-					
+					SimpleTownsEconomy.notifyPlayer(1, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.unclaim"));
 				} else {
-					// non-success
-					
+					SimpleTownsEconomy.notifyPlayer(0, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.unclaim"));
+					event.setCancelled(true);
 				}
 			}
 		}
@@ -137,6 +140,37 @@ public class SimpleTownsListener implements Listener {
 	 */
 	public void onAddPlayer(TownAddEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
+		
+		if(SimpleTownsEconomy.getconfig().getBoolean("Payments.enabled")) {
+			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.add") > 0) {
+				if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"))) {
+					SimpleTownsEconomy.notifyPlayer(1, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"));
+				} else {
+					SimpleTownsEconomy.notifyPlayer(0, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"));
+					event.setCancelled(true);
+				}
+			}
+		}
 	}
+	/**
+	 * Charge for adding a player 
+	 * @param event
+	 */
+	public void onRemovePlayer(TownRemoveEvent event) {
+		if(!(event.getSender() instanceof Player)) return;
+		
+		if(SimpleTownsEconomy.getconfig().getBoolean("Payments.enabled")) {
+			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.remove") > 0) {
+				if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"))) {
+					SimpleTownsEconomy.notifyPlayer(1, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"));
+				} else {
+					SimpleTownsEconomy.notifyPlayer(0, (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"));
+					event.setCancelled(true);
+				}
+			}
+		}
+	}
+	
+	
 	
 }
