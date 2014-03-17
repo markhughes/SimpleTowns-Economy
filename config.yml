@@ -19,4 +19,4 @@ Message:
   bankadd: 'You have added <amount> to your towns bank.'
   banktake: 'You have taken <amount> from your towns bank.'
   bankrequest: '<player> has requested to take <amount> from the <town>\'s bank. To accept this, type /town bank accept <player>'
-  banknotify: '<player> has taken <amount> from <town>\'s bank.'
+  banknotify: '<player> has taken <amount> from <town>s bank.'
