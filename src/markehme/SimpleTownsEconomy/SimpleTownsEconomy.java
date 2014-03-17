@@ -18,10 +18,14 @@
 
 package markehme.SimpleTownsEconomy;
 
+import java.io.IOException;
 import java.util.logging.Level;
 
+import markehme.SimpleTownsEconomy.extras.Metrics;
+import markehme.SimpleTownsEconomy.extras.Metrics.Graph;
 import net.milkbowl.vault.economy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -44,6 +48,7 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	
 	private static Economy economy = null;
 	
+	private static Metrics metrics = null;
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
@@ -56,6 +61,29 @@ public class SimpleTownsEconomy extends JavaPlugin {
 			economy = economyProvider.getProvider();
 		} else {
 			log("Vault could not find a permission provider, do you have Vault?");
+		}
+		
+        
+		try {
+			
+			metrics = new Metrics(this);
+			
+            Graph SimpleTownsVersion = metrics.createGraph("SimpleTowns Version");
+	        
+            SimpleTownsVersion.addPlotter(new Metrics.Plotter(Bukkit.getPluginManager().getPlugin("SimpleTowns").getDescription().getVersion()) {
+
+                @Override
+                public int getValue() {
+                    return 1;
+                }
+            });
+            
+			metrics.start();
+			
+		} catch (IOException e) {
+			
+			log("Metrics failed to not start up: " + e.getMessage());
+			
 		}
 	}
 	
@@ -98,7 +126,26 @@ public class SimpleTownsEconomy extends JavaPlugin {
 		economy.depositPlayer(player.getName(), amount);
 	}
 	
+	/**
+	 * Logs to console as INFO 
+	 * @param msg
+	 */
 	public static void log(String msg) {
 		plugin.getLogger().log(Level.INFO, msg);
+	}
+	
+	/**
+	 * Notifys a player they were charged 
+	 * @param player
+	 * @param amount
+	 */
+	public static void notifyPlayer(int pass, Player player, Double amount) {
+		if(pass == 1) {
+			player.sendMessage(config.getString("Message.charged").replace("<amount>", amount.toString()));
+		} else if(pass == 0) {
+			player.sendMessage(config.getString("Message.chargefail").replace("<amount>", amount.toString()));
+		} else if(pass == 2) {
+			player.sendMessage(config.getString("Message.refunded").replace("<amount>", amount.toString()));
+		}
 	}
  }
