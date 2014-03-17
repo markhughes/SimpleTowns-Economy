@@ -49,6 +49,7 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	private static Economy economy = null;
 	
 	private static Metrics metrics = null;
+	
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
@@ -60,10 +61,10 @@ public class SimpleTownsEconomy extends JavaPlugin {
 		if(economyProvider != null) {
 			economy = economyProvider.getProvider();
 		} else {
-			log("Vault could not find a permission provider, do you have Vault?");
+			log("Vault could not find an economy provider, do you have Vault?");
 		}
-		
         
+		
 		try {
 			
 			metrics = new Metrics(this);
