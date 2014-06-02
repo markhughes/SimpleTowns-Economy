@@ -26,6 +26,7 @@ import markehme.SimpleTownsEconomy.extras.Metrics.Graph;
 import markehme.SimpleTownsEconomy.listeners.SimpleTownsListener;
 
 import net.milkbowl.vault.economy.Economy;
+import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -51,6 +52,7 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	private static JavaPlugin plugin;
 	
 	private static Economy economy = null;
+	private static Permission permission = null;
 	
 	private static Metrics metrics = null;
 	
@@ -66,12 +68,21 @@ public class SimpleTownsEconomy extends JavaPlugin {
 		if(!SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) log("Payments are enabled");
 		if(!SimpleTownsEconomy.getconfig().getBoolean("Refunds.enable")) log("Refunds are enabled");
 		
-		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration( net.milkbowl.vault.economy.Economy.class );
+		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if(economyProvider != null) {
 			economy = economyProvider.getProvider();
 		} else {
 			log("Vault could not find an economy provider, do you have Vault?");
 		}
+		
+		
+		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
+		if(economyProvider != null) {
+			permission = permissionProvider.getProvider();
+		}
+		
+		
+		
         
 		
 		try {
@@ -109,7 +120,7 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * Reloads the configuration file
 	 */
 	public static void doReload() {
-		config = plugin.getConfig();
+		plugin.reloadConfig();
 		log("Economy settings re-read from config");
 	}
 	
@@ -167,7 +178,10 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @return
 	 */
 	public static boolean shouldCharge(Player player, Town town) {
-		if( (!town.hasMember(player.getName())) && player.isOp() ) {
+		
+		if(permission.playerHas(player, "simpletownseconomy.bypass")) return false;
+		
+		if((!town.hasMember(player.getName())) && player.isOp()) {
 			return false;
 		} else {
 			return true;
