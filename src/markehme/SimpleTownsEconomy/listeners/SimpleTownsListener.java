@@ -22,6 +22,7 @@ import markehme.SimpleTownsEconomy.SimpleTownsEconomy;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 
 import com.gmail.jameshealey1994.simpletowns.events.TownAddEvent;
@@ -38,7 +39,7 @@ public class SimpleTownsListener implements Listener {
 	 * Reload our config when SimpleTowns reloads theirs
 	 * @param event
 	 */
-	@EventHandler
+	@EventHandler(priority=EventPriority.LOW)
 	public void onReload(TownAfterReloadEvent event) { 
 		SimpleTownsEconomy.doReload();
 	}
@@ -47,14 +48,14 @@ public class SimpleTownsListener implements Listener {
 	 * Charge for Town creation
 	 * @param event
 	 */
-	@EventHandler
+	@EventHandler(priority=EventPriority.LOW)
 	public void onTownCreate(TownCreateEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
 		if(!SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) return;
 		
 		// Do not use 'shouldCharge' here - town will be null!
-		if(SimpleTownsEconomy.getconfig().getDouble("Payments.create") > 0) {
+		if(SimpleTownsEconomy.getconfig().getDouble("Payments.create") > 0 && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
 			if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"))) {
 				SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"));
 			} else {
@@ -69,7 +70,7 @@ public class SimpleTownsListener implements Listener {
 	 * Or, refunds
 	 * @param event
 	 */
-	@EventHandler
+	@EventHandler(priority=EventPriority.LOW)
 	public void onTownDelete(TownDeleteEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
@@ -99,7 +100,7 @@ public class SimpleTownsListener implements Listener {
 	 * Charge for land claim.
 	 * @param event
 	 */
-	@EventHandler
+	@EventHandler(priority=EventPriority.LOW)
 	public void onLandClaim(TownClaimEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
@@ -119,7 +120,7 @@ public class SimpleTownsListener implements Listener {
 	 * Refund for land unclaim 
 	 * @param event
 	 */
-	@EventHandler
+	@EventHandler(priority=EventPriority.LOW)
 	public void onLandUnclaim(TownUnclaimEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
@@ -166,7 +167,4 @@ public class SimpleTownsListener implements Listener {
 			}
 		}
 	}
-	
-	
-	
 }
