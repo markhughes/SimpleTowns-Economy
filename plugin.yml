@@ -6,6 +6,6 @@ version: 1.0.1
 depend: [ SimpleTowns, Vault ]
 dev-url: http://dev.bukkit.org/bukkit-plugins/simpletownseconomy/
 permissions:
-  simpletownseconomy.bypass
+  simpletownseconomy.bypass:
     default: false
     description: Allows a player to bypass charges
