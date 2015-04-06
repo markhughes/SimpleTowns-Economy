@@ -53,8 +53,7 @@ public class SimpleTownsListener implements Listener {
 		if(!(event.getSender() instanceof Player)) return;
 		
 		if(!SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) return;
-		
-		// Do not use 'shouldCharge' here - town will be null!
+				
 		if(SimpleTownsEconomy.getconfig().getDouble("Payments.create") > 0 && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
 			if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"))) {
 				SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"));
@@ -97,7 +96,7 @@ public class SimpleTownsListener implements Listener {
 	}
 	
 	/**
-	 * Charge for land claim.
+	 * Charge for land claim
 	 * @param event
 	 */
 	@EventHandler(priority=EventPriority.LOW)
@@ -105,12 +104,13 @@ public class SimpleTownsListener implements Listener {
 		if(!(event.getSender() instanceof Player)) return;
 		
 		if(!SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) return;
+		Double extraCharge = SimpleTownsEconomy.getconfig().getDouble("Expenses.additionalPerChunkOwned", 0.0) * event.getTown().getTownChunks().size();
 		
-		if(SimpleTownsEconomy.getconfig().getDouble("Payments.claim") > 0 && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
-			if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim"))) {
-				SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim"));
+		if(SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge > 0 && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
+			if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge)) {
+				SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge);
 			} else {
-				SimpleTownsEconomy.notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim"));
+				SimpleTownsEconomy.notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge);
 				event.setCancelled(true);
 			}
 		}

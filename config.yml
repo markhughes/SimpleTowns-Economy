@@ -9,6 +9,8 @@ Refunds:
   enable: false
   delete: 10.00
   unclaim: 5.00
+Expenses:
+  additionalPerChunkOwned: 0
 Bank:
   enable: false
   mode: 1
