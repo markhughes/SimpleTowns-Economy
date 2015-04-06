@@ -75,15 +75,10 @@ public class SimpleTownsEconomy extends JavaPlugin {
 			log("Vault could not find an economy provider, do you have Vault?");
 		}
 		
-		
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
 		if(economyProvider != null) {
 			permission = permissionProvider.getProvider();
 		}
-		
-		
-		
-        
 		
 		try {
 			
@@ -92,7 +87,6 @@ public class SimpleTownsEconomy extends JavaPlugin {
             Graph SimpleTownsVersion = metrics.createGraph("SimpleTowns Version");
 	        
             SimpleTownsVersion.addPlotter(new Metrics.Plotter(Bukkit.getPluginManager().getPlugin("SimpleTowns").getDescription().getVersion()) {
-
                 @Override
                 public int getValue() {
                     return 1;
@@ -102,9 +96,7 @@ public class SimpleTownsEconomy extends JavaPlugin {
 			metrics.start();
 			
 		} catch (IOException e) {
-			
 			log("Metrics failed to not start up: " + e.getMessage());
-			
 		}
 	}
 	
