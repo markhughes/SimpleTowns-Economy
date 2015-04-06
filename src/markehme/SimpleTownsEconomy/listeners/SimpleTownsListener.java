@@ -135,6 +135,7 @@ public class SimpleTownsListener implements Listener {
 	 * Charge for adding a player 
 	 * @param event
 	 */
+	@EventHandler(priority=EventPriority.LOW)
 	public void onAddPlayer(TownAddEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
@@ -153,6 +154,7 @@ public class SimpleTownsListener implements Listener {
 	 * Charge for removing a player 
 	 * @param event
 	 */
+	@EventHandler(priority=EventPriority.LOW)
 	public void onRemovePlayer(TownRemoveEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
