@@ -42,7 +42,7 @@ import com.gmail.jameshealey1994.simpletowns.object.Town;
  * 
  * GitHub: https://github.com/MarkehMe/SimpleTowns-Economy
  * 
- * @author Mark Hughes <mark@markeh.me>
+ * @author Mark Hughes <m@rkhugh.es>
  *
  */
 public class SimpleTownsEconomy extends JavaPlugin {
