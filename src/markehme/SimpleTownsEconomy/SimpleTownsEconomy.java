@@ -123,8 +123,8 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @return
 	 */
 	public static boolean chargePlayer(Player player, Double amount) {
-		if(economy.has(player.getName(), amount)) {
-			economy.withdrawPlayer(player.getName(), amount);
+		if (economy.has(player, amount)) {
+			economy.withdrawPlayer(player, amount);
 			return true;
 		}
 		return false;
@@ -136,7 +136,7 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @param amount
 	 */
 	public static void refundPlayer(Player player, Double amount) {
-		economy.depositPlayer(player.getName(), amount);
+		economy.depositPlayer(player, amount);
 	}
 	
 	/**
