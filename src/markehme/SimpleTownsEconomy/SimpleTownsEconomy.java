@@ -19,7 +19,6 @@
 package markehme.SimpleTownsEconomy;
 
 import java.io.IOException;
-import java.util.logging.Level;
 
 import markehme.SimpleTownsEconomy.extras.Metrics;
 import markehme.SimpleTownsEconomy.extras.Metrics.Graph;
@@ -29,6 +28,7 @@ import net.milkbowl.vault.economy.Economy;
 import net.milkbowl.vault.permission.Permission;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -47,26 +47,39 @@ import com.gmail.jameshealey1994.simpletowns.object.Town;
  */
 public class SimpleTownsEconomy extends JavaPlugin {
 	
-	static FileConfiguration config;
+	// ---------------------------------------- //
+	// INSTANCE & CONSTRUCT
+	// ---------------------------------------- //
 	
-	private static JavaPlugin plugin;
+	private static SimpleTownsEconomy i;
+	public SimpleTownsEconomy() { i = this; }
+	public static SimpleTownsEconomy get() { return i; }
 	
-	private static Economy economy = null;
-	private static Permission permission = null;
+	// ---------------------------------------- //
+	// FIELDS
+	// ---------------------------------------- //
 	
-	private static Metrics metrics = null;
+	private static FileConfiguration config;
+		
+	private Economy economy = null;
+	private Permission permission = null;
 	
+	private Metrics metrics = null;
+	
+	// ---------------------------------------- //
+	// METHODS
+	// ---------------------------------------- //
+
 	@Override
 	public void onEnable() {
 		saveDefaultConfig();
 		
 		config = getConfig();
-		plugin = this;
 		
 		Bukkit.getPluginManager().registerEvents(new SimpleTownsListener(), this);
 		
-		if(!SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) log("Payments are enabled");
-		if(!SimpleTownsEconomy.getconfig().getBoolean("Refunds.enable")) log("Refunds are enabled");
+		if( ! getconfig().getBoolean("Payments.enable")) log("Payments are enabled");
+		if( ! getconfig().getBoolean("Refunds.enable")) log("Refunds are enabled");
 		
 		RegisteredServiceProvider<Economy> economyProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.economy.Economy.class);
 		if(economyProvider != null) {
@@ -76,7 +89,7 @@ public class SimpleTownsEconomy extends JavaPlugin {
 		}
 		
 		RegisteredServiceProvider<Permission> permissionProvider = getServer().getServicesManager().getRegistration(net.milkbowl.vault.permission.Permission.class);
-		if(economyProvider != null) {
+		if(permissionProvider != null) {
 			permission = permissionProvider.getProvider();
 		}
 		
@@ -105,14 +118,14 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @return
 	 */
 	public static FileConfiguration getconfig() {
-		return(config);
+		return config;
 	}
 	
 	/**
 	 * Reloads the configuration file
 	 */
-	public static void doReload() {
-		plugin.reloadConfig();
+	public void doReload() {
+		this.reloadConfig();
 		log("Economy settings re-read from config");
 	}
 	
@@ -122,9 +135,9 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @param amount
 	 * @return
 	 */
-	public static boolean chargePlayer(Player player, Double amount) {
-		if (economy.has(player, amount)) {
-			economy.withdrawPlayer(player, amount);
+	public boolean chargePlayer(Player player, Double amount) {
+		if (this.economy.has(player, amount)) {
+			this.economy.withdrawPlayer(player, amount);
 			return true;
 		}
 		return false;
@@ -135,8 +148,8 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @param player
 	 * @param amount
 	 */
-	public static void refundPlayer(Player player, Double amount) {
-		economy.depositPlayer(player, amount);
+	public void refundPlayer(Player player, Double amount) {
+		this.economy.depositPlayer(player, amount);
 	}
 	
 	/**
@@ -144,7 +157,9 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @param msg
 	 */
 	public static void log(String msg) {
-		plugin.getLogger().log(Level.INFO, msg);
+		Bukkit.getConsoleSender().sendMessage(
+				ChatColor.AQUA + "[SimpleTownsEconomy] " +
+				ChatColor.WHITE + msg);
 	}
 	
 	/**
@@ -152,7 +167,7 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @param player
 	 * @param amount
 	 */
-	public static void notifyPlayer(String pass, Player player, Double amount) {
+	public void notifyPlayer(String pass, Player player, Double amount) {
 		if(pass.equals("charged")) {
 			player.sendMessage(config.getString("Message.charged").replace("<amount>", amount.toString()));
 		} else if(pass.equals("chargefail")) {
@@ -169,14 +184,13 @@ public class SimpleTownsEconomy extends JavaPlugin {
 	 * @param town
 	 * @return
 	 */
-	public static boolean shouldCharge(Player player, Town town) {
+	public boolean shouldCharge(Player player, Town town) {
+		if (this.permission.playerHas(player, "simpletownseconomy.bypass")) return false;
 		
-		if(permission.playerHas(player, "simpletownseconomy.bypass")) return false;
-		
-		if((!town.hasMember(player.getName())) && player.isOp()) {
+		if ((!town.hasMember(player.getName())) && player.isOp()) {
 			return false;
-		} else {
-			return true;
 		}
+		
+		return true;
 	}
  }

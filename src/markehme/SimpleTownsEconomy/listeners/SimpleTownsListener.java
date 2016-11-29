@@ -41,7 +41,7 @@ public class SimpleTownsListener implements Listener {
 	 */
 	@EventHandler(priority=EventPriority.LOW)
 	public void onReload(TownAfterReloadEvent event) { 
-		SimpleTownsEconomy.doReload();
+		SimpleTownsEconomy.get().doReload();
 	}
 	
 	/**
@@ -54,11 +54,11 @@ public class SimpleTownsListener implements Listener {
 		
 		if(!SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) return;
 				
-		if(SimpleTownsEconomy.getconfig().getDouble("Payments.create") > 0 && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
-			if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"))) {
-				SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"));
+		if(SimpleTownsEconomy.getconfig().getDouble("Payments.create") > 0 && SimpleTownsEconomy.get().shouldCharge((Player) event.getSender(), event.getTown())) {
+			if(SimpleTownsEconomy.get().chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"))) {
+				SimpleTownsEconomy.get().notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"));
 			} else {
-				SimpleTownsEconomy.notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"));
+				SimpleTownsEconomy.get().notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.create"));
 				event.setCancelled(true);
 			}
 		}
@@ -75,11 +75,11 @@ public class SimpleTownsListener implements Listener {
 		
 		// Payment
 		if(SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) {
-			if(SimpleTownsEconomy.getconfig().getDouble("Payments.delete") > 0 && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
-				if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"))) {
-					SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"));
+			if(SimpleTownsEconomy.getconfig().getDouble("Payments.delete") > 0 && SimpleTownsEconomy.get().shouldCharge((Player) event.getSender(), event.getTown())) {
+				if(SimpleTownsEconomy.get().chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"))) {
+					SimpleTownsEconomy.get().notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"));
 				} else {
-					SimpleTownsEconomy.notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"));
+					SimpleTownsEconomy.get().notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.delete"));
 					event.setCancelled(true);
 				}
 			}
@@ -88,9 +88,9 @@ public class SimpleTownsListener implements Listener {
 		
 		// Refund
 		if(SimpleTownsEconomy.getconfig().getBoolean("Refunds.enable")) {
-			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.delete") > 0 && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
-				SimpleTownsEconomy.refundPlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.delete"));
-				SimpleTownsEconomy.notifyPlayer("refunded", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.delete"));
+			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.delete") > 0 && SimpleTownsEconomy.get().shouldCharge((Player) event.getSender(), event.getTown())) {
+				SimpleTownsEconomy.get().refundPlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.delete"));
+				SimpleTownsEconomy.get().notifyPlayer("refunded", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.delete"));
 			}
 		}
 	}
@@ -106,11 +106,11 @@ public class SimpleTownsListener implements Listener {
 		if(!SimpleTownsEconomy.getconfig().getBoolean("Payments.enable")) return;
 		Double extraCharge = SimpleTownsEconomy.getconfig().getDouble("Expenses.additionalPerChunkOwned", 0.0) * event.getTown().getTownChunks().size();
 		
-		if(SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge > 0 && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
-			if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge)) {
-				SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge);
+		if(SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge > 0 && SimpleTownsEconomy.get().shouldCharge((Player) event.getSender(), event.getTown())) {
+			if(SimpleTownsEconomy.get().chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge)) {
+				SimpleTownsEconomy.get().notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge);
 			} else {
-				SimpleTownsEconomy.notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge);
+				SimpleTownsEconomy.get().notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.claim")+extraCharge);
 				event.setCancelled(true);
 			}
 		}
@@ -124,9 +124,9 @@ public class SimpleTownsListener implements Listener {
 	public void onLandUnclaim(TownUnclaimEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
-		if(SimpleTownsEconomy.getconfig().getBoolean("Refunds.enable") && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown()) ) {
+		if(SimpleTownsEconomy.getconfig().getBoolean("Refunds.enable") && SimpleTownsEconomy.get().shouldCharge((Player) event.getSender(), event.getTown()) ) {
 			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.unclaim") > 0) {
-				SimpleTownsEconomy.refundPlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.unclaim"));
+				SimpleTownsEconomy.get().refundPlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.unclaim"));
 			}
 		}
 	}
@@ -139,12 +139,12 @@ public class SimpleTownsListener implements Listener {
 	public void onAddPlayer(TownAddEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
-		if(SimpleTownsEconomy.getconfig().getBoolean("Payments.enable") && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
+		if(SimpleTownsEconomy.getconfig().getBoolean("Payments.enable") && SimpleTownsEconomy.get().shouldCharge((Player) event.getSender(), event.getTown())) {
 			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.add") > 0) {
-				if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"))) {
-					SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"));
+				if(SimpleTownsEconomy.get().chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"))) {
+					SimpleTownsEconomy.get().notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"));
 				} else {
-					SimpleTownsEconomy.notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"));
+					SimpleTownsEconomy.get().notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Payments.add"));
 					event.setCancelled(true);
 				}
 			}
@@ -158,12 +158,12 @@ public class SimpleTownsListener implements Listener {
 	public void onRemovePlayer(TownRemoveEvent event) {
 		if(!(event.getSender() instanceof Player)) return;
 		
-		if(SimpleTownsEconomy.getconfig().getBoolean("Payments.enable") && SimpleTownsEconomy.shouldCharge((Player) event.getSender(), event.getTown())) {
+		if(SimpleTownsEconomy.getconfig().getBoolean("Payments.enable") && SimpleTownsEconomy.get().shouldCharge((Player) event.getSender(), event.getTown())) {
 			if(SimpleTownsEconomy.getconfig().getDouble("Refunds.remove") > 0) {
-				if(SimpleTownsEconomy.chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"))) {
-					SimpleTownsEconomy.notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"));
+				if(SimpleTownsEconomy.get().chargePlayer((Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"))) {
+					SimpleTownsEconomy.get().notifyPlayer("charged", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"));
 				} else {
-					SimpleTownsEconomy.notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"));
+					SimpleTownsEconomy.get().notifyPlayer("chargefail", (Player) event.getSender(), SimpleTownsEconomy.getconfig().getDouble("Refunds.remove"));
 					event.setCancelled(true);
 				}
 			}
