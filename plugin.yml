@@ -2,7 +2,7 @@ name: SimpleTownsEconomy
 main: markehme.SimpleTownsEconomy.SimpleTownsEconomy
 author: MarkehMe
 website: http://markeh.me
-version: 1.1.0
+version: 1.1.1
 depend: [ SimpleTowns, Vault ]
 dev-url: http://dev.bukkit.org/bukkit-plugins/simpletownseconomy/
 permissions:
