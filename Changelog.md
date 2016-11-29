@@ -1,3 +1,7 @@
+# SimpleTownsEconomy 1.1.1
+
+ * Fixing bug with Metrics
+
 # SimpleTownsEconomy 1.1.0
 
  * Adds Expenses.additionalPerChunkOwned which adds on an expense for each already existing chunk
