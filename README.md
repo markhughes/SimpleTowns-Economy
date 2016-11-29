@@ -1,4 +1,3 @@
-SimpleTowns-Economy
-===================
+![SimpleTowns Economy](https://raw.githubusercontent.com/MarkehMe/SimpleTowns-Economy/master/media/SimpleTownsEconomy.png)
 
-Creates an economy system with refunds for SimpleTowns. 
+https://dev.bukkit.org/bukkit-plugins/simpletownseconomy/
